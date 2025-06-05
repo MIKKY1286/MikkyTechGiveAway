@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reset Password – Mikky Tech Giveaway</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-white p-8 rounded shadow max-w-md w-full">
+    <h1 class="text-2xl font-bold mb-6 text-center">Reset Password</h1>
+    <form id="reset-form" class="space-y-4">
+      <input
+        type="email"
+        id="email"
+        placeholder="Enter your admin email"
+        required
+        class="w-full p-3 border rounded"
+      />
+      <button
+        type="submit"
+        class="w-full bg-yellow-600 text-white p-3 rounded hover:bg-yellow-700"
+      >
+        Send Reset Email
+      </button>
+    </form>
+    <p id="message" class="mt-4 text-center"></p>
+    <p class="mt-4 text-center">
+      Remembered your password? 
+      <a href="./admin.html" class="text-blue-600 hover:underline">Login here</a>
+    </p>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyCXQzFpqeGz_nO9aeGHNME7NWrR6xDtg44",
+    authDomain: "bizgenius-4365c.firebaseapp.com",
+    projectId: "bizgenius-4365c",
+    storageBucket: "bizgenius-4365c.firebasestorage.app",
+    messagingSenderId: "1022780720341",
+    appId: "1:1022780720341:web:eca37a2c5a452a8e168e5c",
+    measurementId: "G-EWRH0W9CDT"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const form = document.getElementById("reset-form");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const email = form.email.value.trim();
+
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          message.style.color = "green";
+          message.textContent = "Password reset email sent! Check your inbox.";
+        })
+        .catch(err => {
+          message.style.color = "red";
+          message.textContent = err.message;
+        });
+    });
+  </script>
+</body>
+</html>

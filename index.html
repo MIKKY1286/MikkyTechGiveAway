@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mikky Technology Giveaway – 6 Year Anniversary</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #0f172a, #1e3a8a);
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Logo -->
+  <img src="./images/Screenshot_2024-11-16_205754-removebg-preview.png" alt="Mikky Technology Logo" class="w-24 md:w-32 mb-4 z-10" />
+
+  <!-- Main Content -->
+  <div class="text-center space-y-6 z-10">
+    <h1 class="text-4xl md:text-5xl font-bold">
+      🎉 Mikky Technology @ 6 🎉
+    </h1>
+    <p class="text-lg max-w-xl mx-auto">
+      Join our special anniversary giveaway! Answer questions, qualify, and stand a chance to win exciting prizes.
+    </p>
+
+    <div id="countdown" class="text-2xl font-semibold"></div>
+
+    <a href="./pages/auth.html" class="mt-6 inline-block bg-yellow-400 text-black font-semibold py-3 px-6 rounded-lg hover:bg-yellow-300 transition">
+      Start Quiz
+    </a>
+
+    <p class="text-sm mt-4 opacity-70">Giveaway ends: June 16, 2025</p>   
+     <p class="text-sm mt-4 opacity-70">Terms and Condition <a href="">READ NOW </a></p>
+
+  </div>
+
+  <!-- Countdown Script -->
+  <script>
+    const endDate = new Date("June 16, 2025 23:59:59").getTime();
+    const countdownElement = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = endDate - now;
+
+      if (distance < 0) {
+        clearInterval(timer);
+        countdownElement.innerHTML = "Giveaway Closed!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
+    }, 1000);
+  </script>
+
+  <!-- Confetti Script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    // Launch confetti once on page load
+    confetti({
+      particleCount: 200,
+      spread: 90,
+      origin: { y: 0.6 }
+    });
+
+    // Optionally repeat every few seconds
+    setInterval(() => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }, 8000);
+  </script>
+</body>
+</html>

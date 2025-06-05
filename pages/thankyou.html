@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You – Mikky Tech Giveaway</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-green-500 to-blue-600 text-white min-h-screen flex items-center justify-center px-4">
+  <div class="bg-white text-center text-black rounded-2xl shadow p-8 max-w-md w-full space-y-4">
+    <img src="../images/Screenshot_2024-11-16_205754-removebg-preview.png" alt="Logo" class="w-16 mx-auto">
+    <h1 class="text-2xl font-bold">🎉 Congratulations!</h1>
+    <p class="text-lg" id="score-msg">You scored X/8</p>
+    <p class="text-sm text-gray-600">Thanks for participating in our 6th Anniversary Giveaway.</p>
+    <a href="./auth.html" class="mt-4 inline-block px-6 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">Logout</a>
+  </div>
+
+  <script>
+    const score = localStorage.getItem("quiz_score");
+    document.getElementById("score-msg").textContent = `You scored ${score}/5`;
+    localStorage.removeItem("quiz_score");
+  </script>
+</body>
+</html>

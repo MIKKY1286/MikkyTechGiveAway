@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz – Mikky Tech Giveaway</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-950 text-white min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-xl bg-white text-black rounded-2xl shadow p-6 space-y-6">
+    <div class="text-center">
+      <img src="../images/Screenshot_2024-11-16_205754-removebg-preview.png" alt="Mikky Tech Logo" class="mx-auto w-16 mb-2">
+      <h2 class="text-xl font-semibold" id="welcome-user">Hi, User!</h2>
+      <p class="text-sm text-gray-500">Answer all questions to qualify 🎉</p>
+      <p class="text-sm text-red-600 font-semibold" id="timer">Time Left: 3:00</p>
+    </div>
+
+    <div id="question-box" class="space-y-4">
+      <!-- Question will be injected here -->
+    </div>
+
+    <div class="flex justify-between">
+      <button id="prev-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hidden">Previous</button>
+      <button id="next-btn" class="bg-blue-700 text-white px-4 py-2 rounded">Next</button>
+    </div>
+
+    <div class="text-center mt-6 hidden" id="submit-box">
+      <button id="submit-btn" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+        Submit Quiz
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Replace with your Firebase config
+    const firebaseConfig = {
+    apiKey: "AIzaSyCXQzFpqeGz_nO9aeGHNME7NWrR6xDtg44",
+    authDomain: "bizgenius-4365c.firebaseapp.com",
+    projectId: "bizgenius-4365c",
+    storageBucket: "bizgenius-4365c.firebasestorage.app",
+    messagingSenderId: "1022780720341",
+    appId: "1:1022780720341:web:eca37a2c5a452a8e168e5c",
+    measurementId: "G-EWRH0W9CDT"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "auth.html";
+      } else {
+        document.getElementById("welcome-user").textContent = `Hi, ${user.displayName || 'there'}!`;
+      }
+    });
+
+    const quizData = [
+  {
+    question: "In which year was Mikky Technology officially incorporated as a company?",
+    options: [
+      "2016",
+      "2017",
+      "2018",
+      "2019"
+    ],
+    answer: "2019"
+  },
+  {
+    question: "Which of the following was Mikky Technology's first major product launch?",
+    options: [
+      "EchoVerse 1.0 platform",
+      "Custom RC cars and drones",
+      "Xup Chat application",
+      "Mikky Technology official website"
+    ],
+    answer: "Custom RC cars and drones"
+  },
+  {
+    question: "What programming language does Mikky Technology primarily use for its web development projects?",
+    options: [
+      "Python",
+      "JavaScript",
+      "Java",
+      "Html"
+    ],
+    answer: "JavaScript"
+  },
+  {
+    question: "Which Firebase service does Mikky Technology utilize to implement real-time chat functionality in its YouChat app?",
+    options: [
+      "Cloud Firestore",
+      "Realtime Database",
+      "Firebase Authentication",
+      "Cloud Functions"
+    ],
+    answer: "Realtime Database"
+  },
+  {
+    question: "Mikky Technology’s EchoVerse 2.0 introduced which groundbreaking feature for exploring parallel lives?",
+    options: [
+      "Memory Chambers",
+      "Virtual Reality Integration",
+      "Social Life Mapper",
+      "Multiverse Adventures"
+    ],
+    answer: "Memory Chambers"
+  },
+  {
+    question: "Who is the founder and CEO of Mikky Technology?",
+    options: [
+      "Michael Ayodeji Oliyide",
+      "Michael Oluyede Ayodeji",
+      "Micheal Ayodeji Oliyide",
+      "Ayodeji Michael Mikky"
+    ],
+    answer: "Michael Ayodeji Oliyide"
+  },
+  {
+    question: "Which technology does Mikky Technology use to generate life story customizations in EchoVerse?",
+    options: [
+      "AI-powered narrative engine",
+      "Rule-based algorithm",
+      "Blockchain smart contracts",
+      "Cloud AI translation"
+    ],
+    answer: "AI-powered narrative engine"
+  },
+  {
+    question: "What is the primary design philosophy behind Mikky Technology’s portfolio website named 'Anonymous'?",
+    options: [
+      "Minimalism and privacy",
+      "High interactivity and animations",
+      "Complex UI with rich graphics",
+      "Open source collaboration"
+    ],
+    answer: "Minimalism and privacy"
+  }
+];
+
+
+    let currentQuestion = 0;
+    const answers = [];
+
+    const questionBox = document.getElementById("question-box");
+    const nextBtn = document.getElementById("next-btn");
+    const prevBtn = document.getElementById("prev-btn");
+    const submitBox = document.getElementById("submit-box");
+
+    function loadQuestion(index) {
+      const q = quizData[index];
+      questionBox.innerHTML = `
+        <h3 class="text-lg font-bold">${index + 1}. ${q.question}</h3>
+        <div class="space-y-2">
+          ${q.options.map((opt) => `
+            <label class="flex items-center space-x-2">
+              <input type="radio" name="option" value="${opt}" ${answers[index] === opt ? 'checked' : ''} class="accent-blue-700" />
+              <span>${opt}</span>
+            </label>
+          `).join("")}
+        </div>
+      `;
+      prevBtn.classList.toggle("hidden", index === 0);
+      nextBtn.classList.toggle("hidden", index === quizData.length - 1);
+      submitBox.classList.toggle("hidden", index !== quizData.length - 1);
+    }
+
+    nextBtn.onclick = () => {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (!selected) return alert("Please select an option.");
+      answers[currentQuestion] = selected.value;
+      currentQuestion++;
+      loadQuestion(currentQuestion);
+    };
+
+    prevBtn.onclick = () => {
+      currentQuestion--;
+      loadQuestion(currentQuestion);
+    };
+
+    document.getElementById("submit-btn").onclick = () => {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (!selected) return alert("Please select an option.");
+      answers[currentQuestion] = selected.value;
+      submitQuiz();
+    };
+
+    function submitQuiz() {
+      const correct = quizData.filter((q, i) => q.answer === answers[i]).length;
+      const user = auth.currentUser;
+
+      const result = {
+        uid: user.uid,
+        name: user.displayName || "Anonymous",
+        email: user.email,
+        score: correct,
+        total: quizData.length,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+
+      db.collection("quiz_results").add(result).then(() => {
+        localStorage.setItem("quiz_score", correct);
+        window.location.href = "./thankyou.html";
+      }).catch(error => {
+        alert("Error saving score: " + error.message);
+      });
+    }
+
+    // Timer logic
+    let timeLeft = 180; // 3 minutes
+    const timerDisplay = document.getElementById("timer");
+    const countdown = setInterval(() => {
+      timeLeft--;
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerDisplay.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        submitQuiz(); // Auto-submit
+      }
+    }, 1000);
+
+    // Initial question load
+    loadQuestion(currentQuestion);
+  </script>
+</body>
+</html>

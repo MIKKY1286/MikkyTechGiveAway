@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Sign Up – Mikky Tech Giveaway</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-white p-8 rounded shadow max-w-md w-full">
+    <h1 class="text-2xl font-bold mb-6 text-center">Admin Sign Up</h1>
+    <form id="signup-form" class="space-y-4">
+      <input
+        type="email"
+        id="email"
+        placeholder="Email"
+        required
+        class="w-full p-3 border rounded"
+      />
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+        minlength="6"
+        class="w-full p-3 border rounded"
+      />
+      <input
+        type="password"
+        id="confirm-password"
+        placeholder="Confirm Password"
+        required
+        minlength="6"
+        class="w-full p-3 border rounded"
+      />
+      <button
+        type="submit"
+        class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700"
+      >
+        Sign Up
+      </button>
+    </form>
+    <p id="error-msg" class="text-red-600 mt-4 text-center"></p>
+    <p class="mt-4 text-center">
+      Already have an account? 
+      <a href="./admin-login.html" class="text-blue-600 hover:underline">Login here</a>
+    </p>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyCXQzFpqeGz_nO9aeGHNME7NWrR6xDtg44",
+    authDomain: "bizgenius-4365c.firebaseapp.com",
+    projectId: "bizgenius-4365c",
+    storageBucket: "bizgenius-4365c.firebasestorage.app",
+    messagingSenderId: "1022780720341",
+    appId: "1:1022780720341:web:eca37a2c5a452a8e168e5c",
+    measurementId: "G-EWRH0W9CDT"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const form = document.getElementById("signup-form");
+    const errorMsg = document.getElementById("error-msg");
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const email = form.email.value.trim();
+      const password = form.password.value.trim();
+      const confirmPassword = form["confirm-password"].value.trim();
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          alert("Sign up successful! You are welcome.");
+          window.location.href = "./admin.html";
+        })
+        .catch(err => {
+          errorMsg.textContent = err.message;
+        });
+    });
+  </script>
+</body>
+</html>
