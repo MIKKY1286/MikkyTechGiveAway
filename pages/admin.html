@@ -59,7 +59,7 @@
     const db = firebase.firestore();
 
     auth.onAuthStateChanged(user => {
-      const allowedEmails = ["michaeloliyide86@gmail.com", "admin2@mikkytech.com"];
+      const allowedEmails = ["michaeloliyide86@gmail.com", "youngbeeh08@gmail.com"];
       if (!user || !allowedEmails.includes(user.email)) {
         alert("Access denied.");
         window.location.href = "./auth.html";
